@@ -1,9 +1,21 @@
-import { User } from "@shared/schema";
+import "express";
 
 declare global {
   namespace Express {
-    interface User extends import("@shared/schema").User {}
-    
+    interface User {
+      claims?: {
+        sub: string;
+        email?: string;
+        first_name?: string;
+        last_name?: string;
+        profile_image_url?: string;
+        exp?: number;
+      };
+      access_token?: string;
+      refresh_token?: string;
+      expires_at?: number;
+    }
+
     interface Request {
       isAuthenticated(): boolean;
       user?: User;

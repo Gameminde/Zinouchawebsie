@@ -270,7 +270,7 @@ export class DbStorage implements IStorage {
     }
 
     // Check max uses
-    if (promo.maxUses && promo.currentUses >= promo.maxUses) {
+    if (promo.maxUses && (promo.currentUses || 0) >= promo.maxUses) {
       return undefined;
     }
 

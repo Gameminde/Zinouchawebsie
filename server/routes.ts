@@ -4,6 +4,22 @@ import { storage } from "./storage";
 import { insertProductSchema, insertOrderSchema, insertReviewSchema, insertAddressSchema } from "@shared/schema";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 
+// Helper to get user ID from request
+const getUserId = (req: Request): string | undefined => {
+  return req.user?.claims?.sub;
+};
+
+// Helper to check if user is admin
+const requireAdminCheck = async (req: Request, res: Response): Promise<boolean> => {
+  const userId = getUserId(req);
+  if (!userId) {
+    return false;
+  }
+  
+  const user = await storage.getUser(userId);
+  return user?.isAdmin || false;
+};
+
 // Helper to ensure user is authenticated
 const requireAuth = (req: Request, res: Response) => {
   if (!req.isAuthenticated() || !req.user) {
@@ -14,8 +30,14 @@ const requireAuth = (req: Request, res: Response) => {
 };
 
 // Helper to ensure user is admin
-const requireAdmin = (req: Request, res: Response) => {
-  if (!req.isAuthenticated() || !req.user || !req.user.isAdmin) {
+const requireAdmin = async (req: Request, res: Response) => {
+  if (!req.isAuthenticated() || !req.user) {
+    res.status(403).json({ error: "Forbidden" });
+    return false;
+  }
+  
+  const isAdmin = await requireAdminCheck(req, res);
+  if (!isAdmin) {
     res.status(403).json({ error: "Forbidden" });
     return false;
   }
@@ -110,7 +132,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Create product (admin only)
   app.post("/api/products", async (req: Request, res: Response) => {
-    if (!requireAdmin(req, res)) return;
+    if (!await requireAdmin(req, res)) return;
     
     try {
       const validated = insertProductSchema.parse(req.body);
@@ -123,7 +145,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Update product (admin only)
   app.put("/api/products/:id", async (req: Request, res: Response) => {
-    if (!requireAdmin(req, res)) return;
+    if (!await requireAdmin(req, res)) return;
     
     try {
       const product = await storage.updateProduct(req.params.id, req.body);
@@ -138,7 +160,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Delete product (admin only)
   app.delete("/api/products/:id", async (req: Request, res: Response) => {
-    if (!requireAdmin(req, res)) return;
+    if (!await requireAdmin(req, res)) return;
     
     try {
       await storage.deleteProduct(req.params.id);
@@ -155,7 +177,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!requireAuth(req, res)) return;
     
     try {
-      const cart = await storage.getCart(req.user!.id);
+      const cart = await storage.getCart(getUserId(req)!);
       res.json(cart || { items: [] });
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch cart" });
@@ -168,8 +190,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     try {
       const { productId, quantity, size, color } = req.body;
-      const cart = await storage.getCart(req.user!.id);
-      const currentItems = cart?.items || [];
+      const cart = await storage.getCart(getUserId(req)!);
+      const currentItems = (cart?.items as any[]) || [];
       
       // Find existing item
       const existingIndex = currentItems.findIndex(
@@ -186,7 +208,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         newItems = [...currentItems, { productId, quantity, size, color }];
       }
       
-      const updatedCart = await storage.upsertCart(req.user!.id, newItems);
+      const updatedCart = await storage.upsertCart(getUserId(req)!, newItems);
       res.json(updatedCart);
     } catch (error) {
       res.status(500).json({ error: "Failed to add to cart" });
@@ -199,8 +221,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     try {
       const { quantity, size, color } = req.body;
-      const cart = await storage.getCart(req.user!.id);
-      const currentItems = cart?.items || [];
+      const cart = await storage.getCart(getUserId(req)!);
+      const currentItems = (cart?.items as any[]) || [];
       
       const newItems = currentItems.map((item: any) => {
         if (item.productId === req.params.productId && item.size === size && item.color === color) {
@@ -209,7 +231,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return item;
       });
       
-      const updatedCart = await storage.upsertCart(req.user!.id, newItems);
+      const updatedCart = await storage.upsertCart(getUserId(req)!, newItems);
       res.json(updatedCart);
     } catch (error) {
       res.status(500).json({ error: "Failed to update cart" });
@@ -222,14 +244,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     try {
       const { size, color } = req.query;
-      const cart = await storage.getCart(req.user!.id);
-      const currentItems = cart?.items || [];
+      const cart = await storage.getCart(getUserId(req)!);
+      const currentItems = (cart?.items as any[]) || [];
       
       const newItems = currentItems.filter((item: any) => 
         !(item.productId === req.params.productId && item.size === size && item.color === color)
       );
       
-      const updatedCart = await storage.upsertCart(req.user!.id, newItems);
+      const updatedCart = await storage.upsertCart(getUserId(req)!, newItems);
       res.json(updatedCart);
     } catch (error) {
       res.status(500).json({ error: "Failed to remove from cart" });
@@ -241,7 +263,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!requireAuth(req, res)) return;
     
     try {
-      await storage.clearCart(req.user!.id);
+      await storage.clearCart(getUserId(req)!);
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ error: "Failed to clear cart" });
@@ -255,7 +277,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!requireAuth(req, res)) return;
     
     try {
-      const wishlist = await storage.getWishlist(req.user!.id);
+      const wishlist = await storage.getWishlist(getUserId(req)!);
       res.json(wishlist || { productIds: [] });
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch wishlist" });
@@ -268,7 +290,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     try {
       const { productId } = req.body;
-      const wishlist = await storage.addToWishlist(req.user!.id, productId);
+      const wishlist = await storage.addToWishlist(getUserId(req)!, productId);
       res.json(wishlist);
     } catch (error) {
       res.status(500).json({ error: "Failed to add to wishlist" });
@@ -280,7 +302,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!requireAuth(req, res)) return;
     
     try {
-      const wishlist = await storage.removeFromWishlist(req.user!.id, req.params.productId);
+      const wishlist = await storage.removeFromWishlist(getUserId(req)!, req.params.productId);
       res.json(wishlist);
     } catch (error) {
       res.status(500).json({ error: "Failed to remove from wishlist" });
@@ -294,9 +316,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!requireAuth(req, res)) return;
     
     try {
-      const orders = req.user!.isAdmin 
+      const isAdmin = await requireAdminCheck(req, res);
+      const orders = isAdmin 
         ? await storage.getAllOrders()
-        : await storage.getAllOrders(req.user!.id);
+        : await storage.getAllOrders(getUserId(req)!);
       res.json(orders);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch orders" });
@@ -314,7 +337,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Check if user owns this order or is admin
-      if (order.userId !== req.user!.id && !req.user!.isAdmin) {
+      const isAdmin = await requireAdminCheck(req, res);
+      if (order.userId !== getUserId(req)! && !isAdmin) {
         return res.status(403).json({ error: "Forbidden" });
       }
       
@@ -331,7 +355,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validated = insertOrderSchema.parse({
         ...req.body,
-        userId: req.user!.id,
+        userId: getUserId(req)!,
       });
       
       const order = await storage.createOrder(validated);
@@ -342,7 +366,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Clear cart
-      await storage.clearCart(req.user!.id);
+      await storage.clearCart(getUserId(req)!);
       
       res.status(201).json(order);
     } catch (error) {
@@ -352,7 +376,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Update order status (admin only)
   app.put("/api/orders/:id/status", async (req: Request, res: Response) => {
-    if (!requireAdmin(req, res)) return;
+    if (!await requireAdmin(req, res)) return;
     
     try {
       const { status } = req.body;
@@ -389,7 +413,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validated = insertReviewSchema.parse({
         ...req.body,
-        userId: req.user!.id,
+        userId: getUserId(req)!,
       });
       const review = await storage.createReview(validated);
       res.status(201).json(review);
@@ -421,7 +445,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!requireAuth(req, res)) return;
     
     try {
-      const addresses = await storage.getUserAddresses(req.user!.id);
+      const addresses = await storage.getUserAddresses(getUserId(req)!);
       res.json(addresses);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch addresses" });
@@ -435,7 +459,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validated = insertAddressSchema.parse({
         ...req.body,
-        userId: req.user!.id,
+        userId: getUserId(req)!,
       });
       const address = await storage.createAddress(validated);
       res.status(201).json(address);
@@ -475,7 +499,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Get admin stats
   app.get("/api/admin/stats", async (req: Request, res: Response) => {
-    if (!requireAdmin(req, res)) return;
+    if (!await requireAdmin(req, res)) return;
     
     try {
       const stats = await storage.getAdminStats();
