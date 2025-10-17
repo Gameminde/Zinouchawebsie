@@ -1,0 +1,190 @@
+Crée un site e-commerce complet et moderne pour la vente de vêtements, maquillage et parfums pour femmes, avec les caractéristiques suivantes :
+
+## DESIGN & INTERFACE UTILISATEUR
+
+**Page d'Accueil :**
+- Hero section plein écran avec une grande image animée (fade-in + parallax effect) et un CTA "Découvrir la Collection"
+- Section des collections en vedette avec des cartes produits animées au hover (scale 1.05, shadow, transition 0.3s)
+- Carrousel de nouveautés avec badges "New"
+- Section best-sellers avec indicateurs de popularité
+- Section témoignages clients (carousel automatique)
+- Newsletter signup avec popup moderne et incentive (10% de réduction)
+- Footer complet avec liens, réseaux sociaux, moyens de paiement
+
+**Style et Animations :**
+- Palette de couleurs : #FFF5F7 (fond), #E8B4BC (accents rose), #1A1A1A (texte), #D4AF37 (or pour CTA)
+- Polices : 'Playfair Display' pour les titres, 'Inter' pour le corps
+- Animations CSS modernes : hover effects, transitions fluides, fade-in au scroll
+- Cards avec glassmorphism effect pour sections premium
+- Boutons avec effet ripple et gradient hover
+
+**Responsive Design :**
+- Mobile-first, totalement responsive (breakpoints : 320px, 768px, 1024px, 1440px)
+- Menu hamburger élégant sur mobile avec animation slide
+- Navigation tactile optimisée
+
+## FONCTIONNALITÉS FRONTEND
+
+**Catalogue Produits :**
+- Page catalogue avec filtres avancés (catégorie, prix, taille, couleur, marque)
+- Tri (popularité, prix croissant/décroissant, nouveautés)
+- Grille de produits responsive (4 colonnes desktop, 2 mobile)
+- Cards produits avec : image principale, titre, prix, badge promo, bouton quick-view, icône wishlist
+- Pagination ou infinite scroll
+
+**Page Produit Détaillée :**
+- Galerie d'images avec zoom au hover et modal lightbox
+- Sélecteur de taille et couleur visuel (couleurs en cercles, tailles en boutons)
+- Quantité avec +/- buttons
+- Bouton "Ajouter au panier" avec animation de confirmation
+- Onglets : Description, Guide des tailles, Avis clients, Livraison & Retours
+- Section "Produits similaires" (carousel)
+- Indicateur de stock en temps réel
+
+**Panier & Checkout :**
+- Panier en sidebar qui slide depuis la droite
+- Résumé : image, nom, variante, quantité (modifiable), prix, sous-total
+- Code promo avec validation
+- Calcul automatique de la livraison
+- Checkout en 3 étapes : Livraison → Paiement → Confirmation
+- Formulaires avec validation en temps réel
+- Options de livraison (standard, express)
+- Multiples moyens de paiement (cartes, PayPal simulation)
+- Page de confirmation avec numéro de commande
+
+**Fonctionnalités Utilisateur :**
+- Système d'authentification (inscription, connexion, mot de passe oublié)
+- Compte utilisateur avec : profil, commandes, adresses, wishlist
+- Wishlist avec possibilité de partage
+- Recherche avec autocomplétion et suggestions
+
+## BACKEND & ADMIN DASHBOARD
+
+**Base de Données :**
+Utilise une base de données (PostgreSQL ou MongoDB) avec les tables/collections :
+- Users (id, email, password_hash, firstName, lastName, createdAt)
+- Products (id, name, description, price, salePrice, category, subcategory, sizes, colors, images[], stock, createdAt)
+- Orders (id, userId, items[], totalAmount, status, shippingAddress, paymentMethod, createdAt)
+- Cart (userId, items[], updatedAt)
+- Wishlist (userId, productIds[], updatedAt)
+- Reviews (id, productId, userId, rating, comment, images[], createdAt)
+
+**API REST :**
+Crée des endpoints pour :
+- Auth : /api/auth/register, /api/auth/login, /api/auth/logout
+- Products : /api/products (GET all, GET by id, POST, PUT, DELETE)
+- Cart : /api/cart (GET, POST add, PUT update, DELETE remove)
+- Orders : /api/orders (GET, POST, PUT status)
+- Users : /api/users (GET profile, PUT update)
+- Wishlist : /api/wishlist (GET, POST, DELETE)
+- Reviews : /api/reviews (GET, POST)
+
+**Dashboard Admin (/admin) :**
+Interface d'administration complète avec :
+
+1. **Dashboard Accueil :**
+   - Statistiques en temps réel (ventes du jour, commandes, nouveaux clients)
+   - Graphiques des ventes (7 derniers jours, mois, année)
+   - Liste des dernières commandes
+   - Produits les plus vendus
+   - Alertes (stock faible, commandes en attente)
+
+2. **Gestion Produits :**
+   - Table de tous les produits avec recherche et filtres
+   - Bouton "Ajouter Produit" → Modal/Page avec formulaire :
+     * Nom, description (textarea)
+     * Prix, prix promo
+     * Catégorie (select), sous-catégorie
+     * Tailles disponibles (checkboxes)
+     * Couleurs (color picker + liste)
+     * Upload multiple d'images (drag & drop)
+     * Stock
+   - Actions : Modifier, Supprimer (avec confirmation)
+   - Import/Export CSV
+
+3. **Gestion Commandes :**
+   - Table de toutes les commandes avec filtres (statut, date, client)
+   - Détail de commande : client, produits, montant, adresse, statut
+   - Changer le statut (En attente → Expédiée → Livrée)
+   - Impression de bon de livraison
+   - Gestion des retours
+
+4. **Gestion Clients :**
+   - Liste des clients avec recherche
+   - Détails client : infos, historique d'achats, total dépensé
+   - Possibilité de bloquer/débloquer
+
+5. **Statistiques & Rapports :**
+   - Graphiques interactifs (Chart.js ou Recharts)
+   - Ventes par période (jour, semaine, mois, année)
+   - Taux de conversion
+   - Panier moyen
+   - Top produits / catégories
+   - Export PDF/CSV
+
+6. **Gestion du Site :**
+   - Paramètres généraux (nom du site, email, téléphone)
+   - Gestion des codes promo
+   - Gestion de la homepage (banners, collections featured)
+   - Gestion du menu
+
+7. **Marketing :**
+   - Newsletters (liste d'abonnés, envoi de campagnes)
+   - Codes de réduction (création, édition)
+   - Pop-ups et bannières promotionnelles
+
+**Sécurité Admin :**
+- Login admin séparé avec session sécurisée
+- Vérification des permissions (middleware)
+- Protection contre les injections SQL/NoSQL
+- Rate limiting sur les endpoints
+
+## STACK TECHNIQUE RECOMMANDÉ
+
+**Frontend :**
+- React.js avec React Router pour le routing
+- Context API ou Redux pour state management
+- Tailwind CSS pour le styling (utilise les classes utilitaires uniquement)
+- Framer Motion pour les animations avancées
+- Axios pour les appels API
+- React Hook Form pour les formulaires
+- Lucide React pour les icônes
+
+**Backend :**
+- Node.js + Express.js
+- PostgreSQL ou MongoDB pour la base de données
+- JWT pour l'authentification
+- Bcrypt pour le hashing des mots de passe
+- Multer pour l'upload d'images
+- Stripe (ou simulation) pour les paiements
+- Nodemailer pour les emails
+
+**Autres :**
+- Variables d'environnement pour les secrets (JWT_SECRET, DB credentials)
+- Validation des données (Joi ou express-validator)
+- CORS configuré
+- Compression et minification
+
+## POINTS IMPORTANTS
+
+✅ Code propre, commenté et organisé en composants réutilisables
+✅ Performance optimisée (lazy loading des images, code splitting)
+✅ Accessibilité (alt tags, labels, ARIA)
+✅ Gestion d'erreurs complète (try/catch, messages utilisateur clairs)
+✅ Responsive design vérifié sur toutes les tailles d'écran
+✅ Animations fluides mais pas trop lourdes (performance)
+✅ NEVER use localStorage or sessionStorage - utilise React state ou base de données
+✅ Formulaires avec validation en temps réel et messages d'erreur
+✅ Loading states et spinners pendant les requêtes API
+✅ Toast notifications pour les actions utilisateur (succès, erreur)
+
+## DONNÉES DE TEST
+
+Crée des données de test pour :
+- 20+ produits variés (vêtements, maquillage, parfums) avec images placeholder
+- 5 catégories principales
+- 3-4 comptes utilisateur de test
+- Quelques commandes exemple
+- Avis clients pour certains produits
+
+Commence par créer la structure du projet, puis construis le frontend avec la homepage animée et les premières pages. Ensuite, développe le backend et le dashboard admin. Teste régulièrement l'application pendant la construction.
