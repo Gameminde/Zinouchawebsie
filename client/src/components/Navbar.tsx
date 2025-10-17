@@ -42,26 +42,24 @@ export function Navbar({ onCartOpen, onSearchOpen }: NavbarProps) {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/">
-            <a className="flex items-center space-x-2" data-testid="link-home">
-              <h1 className="font-serif text-xl sm:text-2xl font-bold bg-gradient-to-r from-primary to-gold bg-clip-text text-transparent">
-                Zinoucha
-              </h1>
-            </a>
+          <Link href="/" className="flex items-center space-x-2" data-testid="link-home">
+            <h1 className="font-serif text-xl sm:text-2xl font-bold bg-gradient-to-r from-primary to-gold bg-clip-text text-transparent">
+              Zinoucha
+            </h1>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
             {navLinks.map((link) => (
-              <Link key={link.href} href={link.href}>
-                <a
-                  className={`text-sm font-medium transition-colors hover:text-primary ${
-                    location === link.href ? "text-primary" : "text-foreground/80"
-                  }`}
-                  data-testid={`link-nav-${link.label.toLowerCase()}`}
-                >
-                  {link.label}
-                </a>
+              <Link 
+                key={link.href} 
+                href={link.href}
+                className={`text-sm font-medium transition-colors hover:text-primary ${
+                  location === link.href ? "text-primary" : "text-foreground/80"
+                }`}
+                data-testid={`link-nav-${link.label.toLowerCase()}`}
+              >
+                {link.label}
               </Link>
             ))}
           </nav>
@@ -79,21 +77,22 @@ export function Navbar({ onCartOpen, onSearchOpen }: NavbarProps) {
             </Button>
 
             {isAuthenticated && (
-              <Link href="/wishlist">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="relative hover-elevate"
-                  data-testid="button-wishlist"
-                >
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative hover-elevate"
+                data-testid="button-wishlist"
+                asChild
+              >
+                <Link href="/wishlist">
                   <Heart className="h-5 w-5" />
                   {wishlistCount > 0 && (
                     <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs">
                       {wishlistCount}
                     </Badge>
                   )}
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             )}
 
             <Button
@@ -112,11 +111,11 @@ export function Navbar({ onCartOpen, onSearchOpen }: NavbarProps) {
             </Button>
 
             {isAuthenticated ? (
-              <Link href="/account">
-                <Button variant="ghost" size="icon" className="hover-elevate" data-testid="button-account">
+              <Button variant="ghost" size="icon" className="hover-elevate" data-testid="button-account" asChild>
+                <Link href="/account">
                   <User className="h-5 w-5" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             ) : (
               <Button
                 variant="default"
@@ -146,16 +145,16 @@ export function Navbar({ onCartOpen, onSearchOpen }: NavbarProps) {
         {mobileMenuOpen && (
           <div className="md:hidden pb-4 pt-2 space-y-2 border-t">
             {navLinks.map((link) => (
-              <Link key={link.href} href={link.href}>
-                <a
-                  className={`block px-3 py-2 rounded-md text-base font-medium hover-elevate ${
-                    location === link.href ? "bg-primary/10 text-primary" : "text-foreground/80"
-                  }`}
-                  onClick={() => setMobileMenuOpen(false)}
-                  data-testid={`link-mobile-${link.label.toLowerCase()}`}
-                >
-                  {link.label}
-                </a>
+              <Link 
+                key={link.href} 
+                href={link.href}
+                className={`block px-3 py-2 rounded-md text-base font-medium hover-elevate ${
+                  location === link.href ? "bg-primary/10 text-primary" : "text-foreground/80"
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+                data-testid={`link-mobile-${link.label.toLowerCase()}`}
+              >
+                {link.label}
               </Link>
             ))}
             {!isAuthenticated && (
