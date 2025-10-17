@@ -106,9 +106,7 @@ export default function Landing() {
               asChild
               data-testid="button-shop-now"
             >
-              <Link href="/shop">
-                <a>Boutique</a>
-              </Link>
+              <Link href="/shop">Boutique</Link>
             </Button>
           </div>
         </div>

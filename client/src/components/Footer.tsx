@@ -47,11 +47,11 @@ export function Footer() {
           <div>
             <h4 className="font-semibold mb-4">Boutique</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link href="/shop?category=vetements"><a className="hover:text-primary transition-colors" data-testid="link-footer-clothes">Vêtements</a></Link></li>
-              <li><Link href="/shop?category=maquillage"><a className="hover:text-primary transition-colors" data-testid="link-footer-makeup">Maquillage</a></Link></li>
-              <li><Link href="/shop?category=parfums"><a className="hover:text-primary transition-colors" data-testid="link-footer-perfumes">Parfums</a></Link></li>
-              <li><Link href="/new"><a className="hover:text-primary transition-colors" data-testid="link-footer-new">Nouveautés</a></Link></li>
-              <li><Link href="/sale"><a className="hover:text-primary transition-colors" data-testid="link-footer-sale">Promotions</a></Link></li>
+              <li><Link href="/shop?category=vetements" className="hover:text-primary transition-colors" data-testid="link-footer-clothes">Vêtements</Link></li>
+              <li><Link href="/shop?category=maquillage" className="hover:text-primary transition-colors" data-testid="link-footer-makeup">Maquillage</Link></li>
+              <li><Link href="/shop?category=parfums" className="hover:text-primary transition-colors" data-testid="link-footer-perfumes">Parfums</Link></li>
+              <li><Link href="/new" className="hover:text-primary transition-colors" data-testid="link-footer-new">Nouveautés</Link></li>
+              <li><Link href="/sale" className="hover:text-primary transition-colors" data-testid="link-footer-sale">Promotions</Link></li>
             </ul>
           </div>
 

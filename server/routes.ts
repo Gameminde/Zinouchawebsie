@@ -29,12 +29,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // ==================== AUTH ROUTES ====================
   
   // Get current user
-  app.get("/api/auth/me", isAuthenticated, async (req: Request, res: Response) => {
+  app.get("/api/auth/me", async (req: Request, res: Response) => {
     try {
+      // Check if isAuthenticated method exists and user is authenticated
+      if (typeof req.isAuthenticated !== 'function' || !req.isAuthenticated() || !req.user) {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+      
       const userId = (req.user as any).claims.sub;
       const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      
       res.json(user);
     } catch (error) {
+      console.error("Error in /api/auth/me:", error);
       res.status(500).json({ error: "Failed to fetch user" });
     }
   });
