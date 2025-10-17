@@ -14,55 +14,55 @@
   --elevate-1: rgba(0,0,0, .03);
   --elevate-2: rgba(0,0,0, .08);
 
-  --background: 330 15% 98%;
+  --background: 20 25% 97%;
 
-  --foreground: 330 15% 10%;
+  --foreground: 0 0% 10%;
 
-  --border: 330 10% 88%;
+  --border: 340 20% 88%;
 
-  --card: 330 12% 96%;
+  --card: 20 30% 98%;
 
-  --card-foreground: 330 12% 12%;
+  --card-foreground: 0 0% 15%;
 
-  --card-border: 330 10% 90%;
+  --card-border: 340 20% 90%;
 
-  --sidebar: 330 10% 94%;
+  --sidebar: 20 25% 96%;
 
-  --sidebar-foreground: 330 10% 14%;
+  --sidebar-foreground: 0 0% 15%;
 
-  --sidebar-border: 330 8% 88%;
+  --sidebar-border: 340 20% 88%;
 
-  --sidebar-primary: 345 45% 55%;
+  --sidebar-primary: 340 55% 65%;
 
-  --sidebar-primary-foreground: 345 45% 98%;
+  --sidebar-primary-foreground: 0 0% 100%;
 
-  --sidebar-accent: 330 12% 90%;
+  --sidebar-accent: 340 30% 92%;
 
-  --sidebar-accent-foreground: 330 12% 20%;
+  --sidebar-accent-foreground: 0 0% 20%;
 
-  --sidebar-ring: 345 50% 60%;
+  --sidebar-ring: 340 60% 70%;
 
-  --popover: 330 10% 92%;
+  --popover: 20 25% 96%;
 
-  --popover-foreground: 330 10% 16%;
+  --popover-foreground: 0 0% 15%;
 
-  --popover-border: 330 8% 86%;
+  --popover-border: 340 20% 88%;
 
-  --primary: 345 45% 55%;
+  --primary: 340 55% 65%;
 
-  --primary-foreground: 345 45% 98%;
+  --primary-foreground: 0 0% 100%;
 
-  --secondary: 330 8% 88%;
+  --secondary: 340 20% 90%;
 
-  --secondary-foreground: 330 8% 18%;
+  --secondary-foreground: 0 0% 20%;
 
-  --muted: 330 8% 90%;
+  --muted: 340 15% 92%;
 
-  --muted-foreground: 330 8% 35%;
+  --muted-foreground: 0 0% 40%;
 
-  --accent: 330 12% 88%;
+  --accent: 340 30% 90%;
 
-  --accent-foreground: 330 12% 22%;
+  --accent-foreground: 0 0% 25%;
 
   --destructive: 0 70% 50%;
 
@@ -349,5 +349,98 @@
   .border.active-elevate-2:not(.no-active-interaction-elevate)::after,
   .border.hover-elevate:not(.no-hover-interaction-elevate)::after {
     inset: -1px;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fade-in-down {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slide-in-right {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-in {
+    animation-fill-mode: both;
+  }
+
+  .fade-in {
+    animation-name: fade-in;
+  }
+
+  .fade-in-up {
+    animation-name: fade-in-up;
+  }
+
+  .fade-in-down {
+    animation-name: fade-in-down;
+  }
+
+  .slide-in-right {
+    animation-name: slide-in-right;
+  }
+
+  .scale-in {
+    animation-name: scale-in;
+  }
+
+  .anim-duration-300 {
+    animation-duration: 300ms;
+  }
+
+  .anim-duration-500 {
+    animation-duration: 500ms;
+  }
+
+  .anim-duration-700 {
+    animation-duration: 700ms;
+  }
+
+  .anim-duration-1000 {
+    animation-duration: 1000ms;
   }
 }

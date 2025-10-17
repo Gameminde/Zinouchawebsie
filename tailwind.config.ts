@@ -17,9 +17,16 @@ export default {
         border: "hsl(var(--border) / <alpha-value>)",
         input: "hsl(var(--input) / <alpha-value>)",
         gold: {
-          DEFAULT: "#D4AF37",
-          light: "#E5C158",
-          dark: "#B8941F",
+          DEFAULT: "#C9A961",
+          light: "#E8D4A0",
+          dark: "#A58B47",
+          metallic: "#D4AF37",
+        },
+        rose: {
+          powder: "#E8C4D8",
+          light: "#F5E1EB",
+          DEFAULT: "#D4A5BD",
+          dark: "#B8849F",
         },
         card: {
           DEFAULT: "hsl(var(--card) / <alpha-value>)",

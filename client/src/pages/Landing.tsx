@@ -80,7 +80,7 @@ export default function Landing() {
           alt="Hero"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="relative z-20 text-center text-white px-4 max-w-4xl mx-auto animate-in fade-in duration-1000">
+        <div className="relative z-20 text-center text-white px-4 max-w-4xl mx-auto animate-in fade-in anim-duration-1000">
           <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
             Élégance & Raffinement
           </h1>
@@ -128,7 +128,7 @@ export default function Landing() {
             {collections.map((collection, index) => (
               <Link key={collection.title} href={collection.link}>
                 <Card
-                  className="group overflow-hidden transition-all duration-300 hover:shadow-2xl hover-elevate active-elevate-2 animate-in fade-in-up duration-700"
+                  className="group overflow-hidden transition-all duration-300 hover:shadow-2xl hover-elevate active-elevate-2 animate-in fade-in-up anim-duration-700"
                   style={{ animationDelay: `${index * 100}ms` }}
                   data-testid={`card-collection-${collection.title.toLowerCase()}`}
                 >
@@ -158,7 +158,7 @@ export default function Landing() {
             {features.map((feature, index) => (
               <div
                 key={feature.title}
-                className="text-center animate-in fade-in-up duration-700"
+                className="text-center animate-in fade-in-up anim-duration-700"
                 style={{ animationDelay: `${index * 100}ms` }}
                 data-testid={`feature-${feature.title.toLowerCase().replace(/\s+/g, '-')}`}
               >
@@ -187,7 +187,7 @@ export default function Landing() {
             {testimonials.map((testimonial, index) => (
               <Card
                 key={testimonial.name}
-                className="animate-in fade-in-up duration-700"
+                className="animate-in fade-in-up anim-duration-700"
                 style={{ animationDelay: `${index * 100}ms` }}
                 data-testid={`testimonial-${index}`}
               >
